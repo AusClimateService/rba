@@ -48,7 +48,7 @@ else
 fi
 
 if [[ "${flags}" == "-c" ]] ; then
-    rm ${nc_outfile}
+    rm ${outdir}/${nc_outfile}
 fi
 
 

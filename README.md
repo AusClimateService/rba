@@ -22,7 +22,7 @@ across ssp126, ssp245, ssp370 and ssp585:
 - EC-Earth3 (57 runs)
 - CanESM (50)
 - ACCESS-ESM1-5 (40)
-- MPI-ESM1-2-LR (13)
+- MPI-ESM1-2-LR (10)
 - ACCESS-CM2 (10)
 - IPSL-CM6A-LR (6)
 - UK-ESM1-0-LL (5)
