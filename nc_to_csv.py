@@ -134,7 +134,7 @@ def mask_arid(frac):
     return frac_masked
 
 
-def add_cities(da, df, index):
+def add_cities(da, df):
     """Add city values to a dataframe"""
 
     city_coords = {
@@ -151,8 +151,6 @@ def add_cities(da, df, index):
         lat, lon = coords
         city_da = da.sel({'lat': lat, 'lon': lon}, method='nearest')
         city_series = city_da.to_pandas()
-        city_series.index = index
-        city_series = city_series.round(decimals=2)
         city_series.name = city
         df[city] = city_series
 
@@ -193,13 +191,12 @@ def main(args):
     spatial_means = ds[args.var].weighted(frac * weights).mean(dim=("lat", "lon"))
     df = spatial_means.to_pandas()
     df.columns = spatial_means['abbrevs']
-    df = df.round(decimals=2)
     if args.add_cities:
-        df = add_cities(ds[args.var], df, index)
+        df = add_cities(ds[args.var], df)
+    df = df.round(decimals=2)
     df.insert(loc=0, column='experiment', value=np.where(df.index >= '2015-01-01', ds.attrs['experiment_id'], 'historical'))
     df.insert(loc=0, column='run', value=ds.attrs['variant_label'])
     df.insert(loc=0, column='model', value=ds.attrs['source_id'])
-    year = df.index.strftime('%Y-%m')
     if args.var == 'SPEI':
         df.insert(loc=0, column='month', value=df.index.month)
     df.insert(loc=0, column='year', value=df.index.year)
