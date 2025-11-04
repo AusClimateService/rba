@@ -17,7 +17,7 @@ The following metrics were selected:
 - *Forest Fire Danger Index (FFDI)*:
   A numeric indicator of the potential danger of a forest fire,
   based on the weather conditions only
-  (i.e. temperature, rainfall deficit, humidity and wind speed).
+  (temperature, rainfall deficit, humidity and wind speed).
   We calculate the maximum daily FFDI value for the year (FFDIx)
   and the number of days per year above the 99th percentile (FFDIgt99p)
   of the reference period (1950-2014).
@@ -57,7 +57,7 @@ we selected any models at all that archived the required daily variables:
 ### Spatial aggregation
 
 Each metric is calculated on the native grid of the climate model.
-For state and national values, an weighted mean is then calculated
+For state and national values, a weighted mean is then calculated
 where the weight for each grid cell is the area of the cell multiplied
 by the fraction of the cell that overlaps
 with the geopgraphic shape (e.g. state) of interest. 
@@ -67,8 +67,8 @@ for an illustrated example.
 For spatial aggregation of FFDI values,
 grid points in arid climate zones are excluded since those areas
 do not experience large scale fires.
-(See [development/koppen_climate_zones.ipynb](https://github.com/AusClimateService/rba/blob/master/development/koppen_climate_zones.ipynb)
-and [development/ffdi-cmip6.ipynb](https://github.com/AusClimateService/rba/blob/master/development/ffdi-cmip6.ipynb).)
+See [development/koppen_climate_zones.ipynb](https://github.com/AusClimateService/rba/blob/master/development/koppen_climate_zones.ipynb)
+and [development/ffdi-cmip6.ipynb](https://github.com/AusClimateService/rba/blob/master/development/ffdi-cmip6.ipynb) for details.
 
 ### Computation
 
