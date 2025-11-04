@@ -2,7 +2,7 @@
 
 The RBA requires climate data out to 2100 relating to heatwaves, droughts and bushfires.
 
-#### Metrics
+### Metrics
 
 The following metrics were selected:
 - *Warm Spell Duration Index (WSDI)*:
@@ -26,7 +26,7 @@ The WSDI and SPEI were partly selected because they are also available from the
 [Climate Data Knowledge Portal](https://climateknowledgeportal.worldbank.org/country/australia/climate-data-projections),
 which allows for comparisons against other countries.
 
-#### CMIP6 Models
+### CMIP6 models
 
 In order to calculate empirical likelihoods and how they are changing over time,
 large model ensembles were required.
@@ -54,7 +54,23 @@ we selected any models at all that archived the required daily variables:
 - CNRM-ESM2-1 (1)
 - CMCC-ESM2 (1)
 
-#### Computation
+### Spatial aggregation
+
+Each metric is calculated on the native grid of the climate model.
+For state and national values, an weighted mean is then calculated
+where the weight for each grid cell is the area of the cell multiplied
+by the fraction of the cell that overlaps
+with the geopgraphic shape (e.g. state) of interest. 
+See [development/wsdi_cmip6.ipynb](https://github.com/AusClimateService/rba/blob/master/development/wsdi_cmip6.ipynb)
+for an illustrated example.
+
+For spatial aggregation of FFDI values,
+grid points in arid climate zones are excluded since those areas
+do not experience large scale fires.
+(See [development/koppen_climate_zones.ipynb](https://github.com/AusClimateService/rba/blob/master/development/koppen_climate_zones.ipynb)
+and [development/ffdi-cmip6.ipynb](https://github.com/AusClimateService/rba/blob/master/development/ffdi-cmip6.ipynb).)
+
+### Computation
 
 To generate the data submit a job:
 
