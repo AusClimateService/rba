@@ -27,15 +27,15 @@ elif [[ "${model}" == "ACCESS-CM2" ]] ; then
 else
     indir=/g/data/oi10/replicas
 fi
-outdir=/g/data/xv83/dbi599/treasury/WSDI/${model}/${ssp}
+outdir=/g/data/xv83/dbi599/rba/WSDI/${model}/${ssp}
 
 histfiles=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmax/${grid}/${version}/*.nc`)
 sspfiles=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmax/${grid}/${version}/*.nc`)
 nc_outfile=wsdi_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_outfile=wsdi_yr_${model}_${ssp}_${run}_aus-states-cities_1850-2100.csv
     
-nc_command="${python} /home/599/dbi599/treasury/wsdi.py ${histfiles[@]} ${sspfiles[@]} ${outdir}/${nc_outfile}"
-csv_command="${python} /home/599/dbi599/treasury/nc_to_csv.py ${outdir}/${nc_outfile} WSDI ${outdir}/${csv_outfile} --add_cities"
+nc_command="${python} /home/599/dbi599/rba/wsdi.py ${histfiles[@]} ${sspfiles[@]} ${outdir}/${nc_outfile}"
+csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${outdir}/${nc_outfile} WSDI ${outdir}/${csv_outfile} --add_cities"
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${outdir}
     echo ${nc_command}
