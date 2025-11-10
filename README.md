@@ -13,6 +13,8 @@ The following metrics were selected:
 - *Standardised Precipitation Evapotranspiration Index (SPEI)*:
   A measure of the integrated water deficit in a location,
   taking into account the contributions of both precipitation (pr) and temperature dependent evapotranspiration.
+  The water deficit values are "standardised" (i.e. transformed to a normal distribution) when calculating the SPEI,
+  such that SPEI values represent standard deviations. 
   The integration period for this production is 12 months (i.e. the SPEI-12).
 - *Forest Fire Danger Index (FFDI)*:
   A numeric indicator of the potential danger of a forest fire,
@@ -69,6 +71,12 @@ grid points in arid climate zones are excluded since those areas
 do not experience large scale fires.
 See [development/koppen_climate_zones.ipynb](https://github.com/AusClimateService/rba/blob/master/development/koppen_climate_zones.ipynb)
 and [development/ffdi-cmip6.ipynb](https://github.com/AusClimateService/rba/blob/master/development/ffdi-cmip6.ipynb) for details.
+
+It's important to note that spatial aggregation can distort the meaning of the absolute values of some metrics.
+For instance, while an FFDI value of >100 at a point location is indicative of severe fire weather,
+this is not true of a state or national average (these aggregated values tend to be lower).
+Similarly, while an SPEI value of -2 at a point location is two standard deviations from the mean,
+that's not true when averaged over many grid points (again, the aggregated values tend to be lower).
 
 ### Computation
 
