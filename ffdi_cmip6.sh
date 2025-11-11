@@ -27,7 +27,7 @@ elif [[ "${model}" == "ACCESS-CM2" ]] ; then
 else
     indir=/g/data/oi10/replicas
 fi
-ffdi_dir=/g/data/xv83/dbi599/treasury/FFDI/${model}/${ssp}
+ffdi_dir=/g/data/xv83/dbi599/rba/FFDI/${model}/${ssp}
 
 # Keetch-Byram Drought Index (KBDI)
 
@@ -35,8 +35,8 @@ pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${gri
 pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*.nc`)
 pr_files=( "${pr_hist_files[@]}" "${pr_ssp_files[@]}" )
 
-pr_clim_path=/g/data/xv83/dbi599/treasury/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
-pr_clim_command="${python} /home/599/dbi599/treasury/pr_climatology.py ${pr_hist_files[@]} 1950-01-01 2014-12-31 ${pr_clim_path}"
+pr_clim_path=/g/data/xv83/dbi599/rba/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
+pr_clim_command="${python} /home/599/dbi599/rba/pr_climatology.py ${pr_hist_files[@]} 1950-01-01 2014-12-31 ${pr_clim_path}"
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${ffdi_dir}
     echo ${pr_clim_command}
@@ -51,7 +51,7 @@ for pr_path in "${pr_files[@]}"; do
     kbdi_file=`basename ${pr_path} | sed s:pr:kbdi:g`
     kbdi_path=${ffdi_dir}/${kbdi_file}
     kbdi_files+=(${kbdi_path})
-    kbdi_command="${python} /home/599/dbi599/treasury/kbdi.py ${pr_path} ${tasmax_path} ${pr_clim_path} ${kbdi_path}"
+    kbdi_command="${python} /home/599/dbi599/rba/kbdi.py ${pr_path} ${tasmax_path} ${pr_clim_path} ${kbdi_path}"
     if [[ "${flags}" == "-e" ]] ; then
         echo ${kbdi_command}
         ${kbdi_command}
@@ -72,7 +72,7 @@ for var in pr tasmax hursmin sfcWindmax; do
     end_date=`echo ${end_date} | cut -d . -f 1`
     zarr_file=${ffdi_dir}/${var}_day_${model}_${ssp}_${run}_${grid}_${start_date}-${end_date}.zarr
     declare ${var}_zarr_file=${zarr_file}
-    zarr_command="/g/data/xv83/dbi599/miniconda3/envs/agcd/bin/python /home/599/dbi599/treasury/nc_to_rechunked_zarr.py ${hist_files[@]} ${ssp_files[@]} ${var} ${zarr_file} /g/data/xv83/dbi599/treasury/temp.zarr"
+    zarr_command="/g/data/xv83/dbi599/miniconda3/envs/agcd/bin/python /home/599/dbi599/rba/nc_to_rechunked_zarr.py ${hist_files[@]} ${ssp_files[@]} ${var} ${zarr_file} /g/data/xv83/dbi599/rba/temp.zarr"
     if [[ "${flags}" == "-e" ]] ; then
         echo ${zarr_command}
         ${zarr_command}
@@ -88,9 +88,9 @@ FFDIgt99p_nc_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_${grid}_1850-2
 FFDIx_csv_path=${ffdi_dir}/FFDIx_yr_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 FFDIgt99p_csv_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 
-ffdi_command="${python} /home/599/dbi599/treasury/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]}"
-FFDIx_csv_command="${python} /home/599/dbi599/treasury/nc_to_csv.py ${FFDIx_nc_path} FFDIx ${FFDIx_csv_path} --mask_arid"
-FFDIgt99p_csv_command="${python} /home/599/dbi599/treasury/nc_to_csv.py ${FFDIgt99p_nc_path} FFDIgt99p ${FFDIgt99p_csv_path} --mask_arid"
+ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]}"
+FFDIx_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIx_nc_path} FFDIx ${FFDIx_csv_path} --mask_arid"
+FFDIgt99p_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIgt99p_nc_path} FFDIgt99p ${FFDIgt99p_csv_path} --mask_arid"
 if [[ "${flags}" == "-e" ]] ; then
     echo ${ffdi_command}
     ${ffdi_command}

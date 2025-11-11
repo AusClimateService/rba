@@ -27,7 +27,7 @@ elif [[ "${model}" == "ACCESS-CM2" ]] ; then
 else
     indir=/g/data/oi10/replicas
 fi
-spei_dir=/g/data/xv83/dbi599/treasury/SPEI/${model}/${ssp}
+spei_dir=/g/data/xv83/dbi599/rba/SPEI/${model}/${ssp}
 
 # Potential evapotranspiration (evspsblpot)
 
@@ -41,7 +41,7 @@ for tasmin_path in "${tasmin_files[@]}"; do
     evspsblpot_file=`basename ${tasmin_path} | sed s:tasmin:evspsblpot-${method}:g`
     evspsblpot_path=${spei_dir}/${evspsblpot_file}
     evspsblpot_files+=(${evspsblpot_path})
-    command="${python} /home/599/dbi599/treasury/evspsblpot.py ${evspsblpot_path} ${method} --tasmin_file ${tasmin_path} --tasmax_file ${tasmax_path}"
+    command="${python} /home/599/dbi599/rba/evspsblpot.py ${evspsblpot_path} ${method} --tasmin_file ${tasmin_path} --tasmax_file ${tasmax_path}"
     if [[ "${flags}" == "-e" ]] ; then
         mkdir -p ${spei_dir}
         echo ${command}
@@ -58,8 +58,8 @@ pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${g
 spei_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 
-spei_command="${python} /home/599/dbi599/treasury/spei.py ${spei_path} --dist fisk --pr_files ${pr_hist_files[@]} ${pr_ssp_files[@]} --evspsblpot_files ${evspsblpot_files[@]}"
-csv_command="${python} /home/599/dbi599/treasury/nc_to_csv.py ${spei_path} SPEI ${csv_path}"
+spei_command="${python} /home/599/dbi599/rba/spei.py ${spei_path} --dist fisk --pr_files ${pr_hist_files[@]} ${pr_ssp_files[@]} --evspsblpot_files ${evspsblpot_files[@]}"
+csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${spei_path} SPEI ${csv_path}"
 if [[ "${flags}" == "-e" ]] ; then
     echo ${spei_command}
     ${spei_command}
