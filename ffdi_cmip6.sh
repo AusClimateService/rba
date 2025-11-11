@@ -35,7 +35,7 @@ pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${gri
 pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*.nc`)
 pr_files=( "${pr_hist_files[@]}" "${pr_ssp_files[@]}" )
 
-pr_clim_path=/g/data/xv83/dbi599/rba/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
+pr_clim_path=${ffdi_dir}/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
 pr_clim_command="${python} /home/599/dbi599/rba/pr_climatology.py ${pr_hist_files[@]} 1950-01-01 2014-12-31 ${pr_clim_path}"
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${ffdi_dir}
