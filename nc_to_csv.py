@@ -125,7 +125,7 @@ def get_regions():
 def mask_arid(frac):
     """Mask arid areas."""
 
-    ds_koppen_1p0 = xr.open_dataset('/g/data/xv83/dbi599/treasury/koppen/koppen_geiger_1p0_1991-2020.nc')
+    ds_koppen_1p0 = xr.open_dataset('/g/data/xv83/dbi599/rba/koppen/koppen_geiger_1p0_1991-2020.nc')
     ds_koppen = xesmf_regrid(ds_koppen_1p0, frac, variable='kg_class')
     ds_koppen = ds_koppen.compute()
     arid = (ds_koppen['kg_class'] > 3.5) & (ds_koppen['kg_class'] < 7.5)
