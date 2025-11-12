@@ -13,9 +13,9 @@ python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 indir=/g/data/ob53/BARRA2/output/reanalysis/AUS-11/BOM/ERA5/historical/hres/BARRA-R2/v1/day/tasmax/latest
 outdir=/g/data/xv83/dbi599/rba/WSDI/BARRA-R2
 
-infiles1=(`ls ${indir}/*_19[8,9]????-??????.nc`)
-infiles2=(`ls ${indir}/*_20[0,1]????-??????.nc`)
-infiles3=(`ls ${indir}/*_202[0,1,2,3,4]???-??????.nc`)
+infiles1=(`ls ${indir}/*_19[8,9]???-??????.nc`)
+infiles2=(`ls ${indir}/*_20[0,1]???-??????.nc`)
+infiles3=(`ls ${indir}/*_202[0,1,2,3,4]??-??????.nc`)
 
 infiles=( "${infiles1[@]}" "${infiles2[@]}" "${infiles3[@]}" )
 
