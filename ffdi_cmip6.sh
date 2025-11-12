@@ -22,17 +22,20 @@ python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 
 if [[ "${model}" == "ACCESS-ESM1-5" ]] ; then
     indir=/g/data/fs38/publications
+    start=1950
 elif [[ "${model}" == "ACCESS-CM2" ]] ; then
     indir=/g/data/fs38/publications
+    start=1850
 else
     indir=/g/data/oi10/replicas
+    start=1850
 fi
 ffdi_dir=/g/data/xv83/dbi599/rba/FFDI/${model}/${ssp}
 
 # Keetch-Byram Drought Index (KBDI)
 
 pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${version}/*.nc`)
-pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*.nc`)
+pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*_20??????-????????.nc`)
 pr_files=( "${pr_hist_files[@]}" "${pr_ssp_files[@]}" )
 
 pr_clim_path=${ffdi_dir}/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
@@ -64,7 +67,7 @@ done
 
 for var in pr tasmax hursmin sfcWindmax; do
     hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/${var}/${grid}/${version}/*.nc`)
-    ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/${var}/${grid}/${version}/*.nc`)
+    ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/${var}/${grid}/${version}/*_20??????-????????.nc`)
     hist_dates=`basename "${hist_files[0]}" | cut -d _ -f 7`
     start_date=`echo ${hist_dates} | cut -d - -f 1`
     ssp_dates=`basename "${ssp_files[-1]}" | cut -d _ -f 7`
@@ -83,12 +86,12 @@ done
 
 # FFDI
 
-FFDIx_nc_path=${ffdi_dir}/FFDIx_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
-FFDIgt99p_nc_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
-FFDIx_csv_path=${ffdi_dir}/FFDIx_yr_${model}_${ssp}_${run}_aus-states_1850-2100.csv
-FFDIgt99p_csv_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_aus-states_1850-2100.csv
+FFDIx_nc_path=${ffdi_dir}/FFDIx_yr_${model}_${ssp}_${run}_${grid}_${start}-2100.nc
+FFDIgt99p_nc_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_${grid}_${start}-2100.nc
+FFDIx_csv_path=${ffdi_dir}/FFDIx_yr_${model}_${ssp}_${run}_aus-states_${start}-2100.csv
+FFDIgt99p_csv_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_aus-states_${start}-2100.csv
 
-ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]}"
+ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]} --start_year ${start}"
 FFDIx_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIx_nc_path} FFDIx ${FFDIx_csv_path} --mask_arid"
 FFDIgt99p_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIgt99p_nc_path} FFDIgt99p ${FFDIgt99p_csv_path} --mask_arid"
 if [[ "${flags}" == "-e" ]] ; then
