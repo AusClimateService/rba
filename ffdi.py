@@ -41,7 +41,7 @@ def main(args):
     # Drought Factor
     kbdi_ds = xr.open_mfdataset(args.kbdi_files, attrs_file=args.kbdi_files[-1])
     kbdi_ds = kbdi_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
-    assert len(kbdi_ds['time']) == nyears
+    assert len(np.unique(kbdi_ds['time'].dt.year)) == nyears
     ntime = len(kbdi_ds['KBDI'].time)
     nlat = len(kbdi_ds['KBDI'].lat)
     nlon = len(kbdi_ds['KBDI'].lon)
@@ -49,7 +49,7 @@ def main(args):
     
     pr_ds = xr.open_dataset(args.pr_zarr, engine='zarr')
     pr_ds = pr_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
-    assert len(pr_ds['time']) == nyears
+    assert len(np.unique(pr_ds['time'].dt.year)) == nyears
     pr_ds['pr'] = xc.core.units.convert_units_to(pr_ds['pr'], 'mm/day')
     
     df_da = xc.indices.griffiths_drought_factor(pr_ds['pr'], kbdi_ds['KBDI'])
@@ -58,15 +58,15 @@ def main(args):
     tasmax_ds = xr.open_dataset(args.tasmax_zarr, engine='zarr')
     #tasmax_ds['tasmax'] = xc.core.units.convert_units_to(tasmax_ds['tasmax'], 'degC')
     tasmax_ds = tasmax_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
-    assert len(tasmax_ds['time']) == nyears
+    assert len(np.unique(tasmax_ds['time'].dt.year)) == nyears
 
     hursmin_ds = xr.open_dataset(args.hursmin_zarr, engine='zarr')
     hursmin_ds = hursmin_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
-    assert len(hursmin_ds['time']) == nyears
+    assert len(np.unique(hursmin_ds['time'].dt.year)) == nyears
 
     sfcWindmax_ds = xr.open_dataset(args.sfcWindmax_zarr, engine='zarr')
     sfcWindmax_ds = sfcWindmax_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
-    assert len(sfcWindmax_ds['time']) == nyears
+    assert len(np.unique(sfcWindmax_ds['time'].dt.year)) == nyears
 
     ffdi_da = xc.indices.mcarthur_forest_fire_danger_index(
         df_da,
