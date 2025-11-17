@@ -46,6 +46,8 @@ def main(args):
 
     assert not os.path.isdir(args.output_zarr), f"Output Zarr collection already exists: {args.output_zarr}"
     ds = xr.open_mfdataset(args.infiles, preprocess=drop_vars, attrs_file=args.infiles[-1])
+    if args.ausclip:
+        ds = ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
     coords = list(ds.coords)
     chunks = ds[args.var].encoding['chunksizes']
     input_chunks = {}
@@ -81,6 +83,7 @@ if __name__ == '__main__':
     parser.add_argument("output_zarr", type=str, help="Path to output chunked zarr collection")
     parser.add_argument("temp_zarr", type=str, help="Temporary zarr collection")
     parser.add_argument("--max_mem", type=str, default='5GB', help="Maximum memory that workers can use")
+    parser.add_argument("--ausclip", action="store_true", default=False, help="Clip lat and lon bounds to Australia")
     args = parser.parse_args()
     main(args)
     

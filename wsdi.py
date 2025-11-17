@@ -15,7 +15,11 @@ dask.diagnostics.ProgressBar().register()
 def main(args):
     """Run the program."""
 
-    ds = xr.open_mfdataset(args.infiles, attrs_file=args.infiles[-1])
+    infile1 = args.infiles[0]
+    if 'zarr' in infile1:
+        ds = xr.open_dataset(args.infiles[0], engine='zarr')
+    else:
+        ds = xr.open_mfdataset(args.infiles, attrs_file=args.infiles[-1])
     ds['tasmax'] = xc.core.units.convert_units_to(ds['tasmax'], 'degC')
     
     tx90 = xc.core.calendar.percentile_doy(

@@ -194,8 +194,10 @@ def main(args):
     if args.add_cities:
         df = add_cities(ds[args.var], df)
     df = df.round(decimals=2)
-    df.insert(loc=0, column='experiment', value=np.where(df.index >= '2015-01-01', ds.attrs['experiment_id'], 'historical'))
-    df.insert(loc=0, column='run', value=ds.attrs['variant_label'])
+    if 'experiment_id' in ds.attrs:
+        df.insert(loc=0, column='experiment', value=np.where(df.index >= '2015-01-01', ds.attrs['experiment_id'], 'historical'))
+    if 'variant_label' in ds.attrs:
+        df.insert(loc=0, column='run', value=ds.attrs['variant_label'])
     df.insert(loc=0, column='model', value=ds.attrs['source_id'])
     if args.var == 'SPEI':
         df.insert(loc=0, column='month', value=df.index.month)
