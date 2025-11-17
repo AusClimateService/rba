@@ -50,10 +50,13 @@ def main(args):
         ds = ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
     coords = list(ds.coords)
     chunks = ds[args.var].encoding['chunksizes']
-    input_chunks = {}
-    for coord, chunk in zip(coords, chunks):
-        input_chunks[coord] = chunk
-    ds = ds.chunk(input_chunks)
+    if chunks:
+        input_chunks = {}
+        for coord, chunk in zip(coords, chunks):
+            input_chunks[coord] = chunk
+        ds = ds.chunk(input_chunks)
+    else:
+        ds = ds.chunk({'time': -1})
     ds.attrs['history'] = cmdprov.new_log(
         infile_logs={args.infiles[0]: ds.attrs['history']}
     )

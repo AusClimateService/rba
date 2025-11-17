@@ -1,9 +1,9 @@
 #
 # Bash script for calculating WDSI from BARRA data
 #
-# Usage: bash wsdi_cmip6.sh {flags}
+# Usage: bash wsdi_barra.sh {flags}
 #
-#   flags:           optional flags (e.g. -e for execute; -c for clean up)
+#   flags:  optional flags (e.g. -e for execute; -c for clean up)
 #
 
 flags=$1

@@ -15,8 +15,17 @@ dask.diagnostics.ProgressBar().register()
 def main(args):
     """Run the program."""
 
-    pr_ds = xr.open_mfdataset(args.pr_files, attrs_file=args.pr_files[-1])
-    evspsblpot_ds = xr.open_mfdataset(args.evspsblpot_files, attrs_file=args.evspsblpot_files[-1])
+    pr_file1 = args.pr_files[0]
+    if 'zarr' in pr_file1:
+        pr_ds = xr.open_dataset(args.pr_files[0], engine='zarr')
+    else:
+        pr_ds = xr.open_mfdataset(args.pr_files, attrs_file=args.pr_files[-1])
+
+    evspsblpot_file1 = args.evspsblpot_files[0]
+    if 'zarr' in evspsblpot_file1:
+        evspsblpot_ds = xr.open_dataset(args.evspsblpot_files[0], engine='zarr')
+    else:
+        evspsblpot_ds = xr.open_mfdataset(args.evspsblpot_files, attrs_file=args.evspsblpot_files[-1])
     
     wb = pr_ds['pr'] - evspsblpot_ds['evspsblpot']
     wb.attrs['units'] = pr_ds['pr'].attrs['units']

@@ -1,8 +1,8 @@
 #!/bin/bash
 #PBS -P xv83
-#PBS -q normal
-#PBS -l walltime=5:00:00
-#PBS -l mem=100GB
+#PBS -q hugemem
+#PBS -l walltime=10:00:00
+#PBS -l mem=500GB
 #PBS -l storage=gdata/xv83+gdata/ia39+gdata/ob53
 #PBS -l wd
 #PBS -l ncpus=1
@@ -12,7 +12,8 @@
 #   qsub -v metric=wsdi barra.job
 
 # Resouces:
-#  WSDI: 5 hours, 100GB
+#  WSDI: 2 hours, 200GB
+#  SPEI: 2 hours, 200GB
 
 
 __conda_setup="$('/g/data/xv83/dbi599/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
