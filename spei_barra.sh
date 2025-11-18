@@ -56,7 +56,7 @@ if [[ "${flags}" == "-e" ]] ; then
     echo ${pr_zarr_command}
 #    ${pr_zarr_command}
     echo ${evspsblpot_zarr_command}
-    ${evspsblpot_zarr_command}
+#    ${evspsblpot_zarr_command}
 else
     echo ${pr_zarr_command}
     echo ${evspsblpot_zarr_command}

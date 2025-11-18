@@ -86,7 +86,8 @@ To generate the data submit a job:
 qsub -v metric=wsdi,model=MPI-ESM1-2-LR,ssp=ssp370,run=r25i1p1f1,grid=gn,version='v*' cmip6.job
 ```
 
-The csv files from numerous runs can then be merged using `concat_csv.py`.
+The csv files from numerous runs can then be merged using `concat_csv.py`
+and likelihoods calculated using `likelihoods.py`.
 
 Don't forget to clean up afterwards (i.e. delete all files except the final csv files):
 

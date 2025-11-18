@@ -16,6 +16,8 @@ def main(args):
     """Run the program."""
 
     ds = xr.open_mfdataset(args.infiles)
+    if args.ausclip:
+        ds = ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
     ds['pr'] = xc.core.units.convert_units_to(ds['pr'], 'mm/day')
     ds = ds.sel(time=slice(args.start_date, args.end_date))
     ds_annual = ds.resample(time='YE').sum('time').mean('time')
@@ -35,5 +37,6 @@ if __name__ == '__main__':
     parser.add_argument("start_date", type=str, help="start date in YYYY-MM-DD format")
     parser.add_argument("end_date", type=str, help="end date in YYYY-MM-DD format")
     parser.add_argument("outfile", type=str, help="output file name")
+    parser.add_argument("--ausclip", action="store_true", default=False, help="Clip lat and lon bounds to Australia")
     args = parser.parse_args()
     main(args)

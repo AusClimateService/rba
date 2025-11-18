@@ -46,10 +46,11 @@ def main(args):
     # write out likelihoods
     for quantile in quantiles:
         percentile = quantile * 100
+        plabel = str(percentile).replace('.', '-')
         if quantile > 0.5:
-            df_threshold_test = df_data > threshold
+            df_threshold_test = df_data > thresholds.loc[quantile]
         else:
-            df_threshold_test = df_data < threshold
+            df_threshold_test = df_data < thresholds.loc[quantile]
         odds = df_threshold_test.rolling(window, step=nruns, center=True).apply(lambda s: (sum(s) / window) * 100)
         odds.index = df['year'].unique()
         odds = odds.dropna()
@@ -64,11 +65,11 @@ def main(args):
             f"Model: {model}",
             f"Experiment: {experiment}",
             f"Runs: {runs}",
-            "Description: Probability (%) of exceeding the threshold, calculated empirically across all model runs for a 20-year rolling window centered on each year"
+            "Description: Probability (%) of exceeding the threshold, calculated empirically across all model runs for a 20-year rolling window centered on each year",
             f"File history: {history}"
         ]
-        outfile = "f{args.outdir}/{metric_label}_yr_{percentile}p-likelihood_{model}_{experiment}_{locations}_{start_year}-{end_year}.csv"
-        with open(args.outfile, mode='w') as f:
+        outfile = f"{args.outdir}/{metric_label}_yr_{plabel}p-likelihood_{model}_{experiment}_{locations}_{start_year}-{end_year}.csv"
+        with open(outfile, mode='w') as f:
             for line in pre_header_lines:
                 f.write(line + '\n')
             odds.to_csv(f, mode='a', header=True, index=True)
@@ -76,6 +77,7 @@ def main(args):
     # write out thresholds
     thresholds.index = thresholds.index * 100
     thresholds.index.name = 'percentile'
+    thresholds = thresholds.round(decimals=2)
     pre_header_lines = [
         f"Metric: {args.metric}",
         f"Threshold: Percentiles over the 1950-2014 period",
@@ -84,11 +86,11 @@ def main(args):
         f"Runs: {runs}",
         f"File history: {history}"
     ]
-    outfile = "f{args.outdir}/{metric_label}_yr_percentiles_{model}_{experiment}_{locations}_1950-2014.csv"
-    with open(args.outfile, mode='w') as f:
+    outfile = f"{args.outdir}/{metric_label}_yr_percentiles_{model}_{experiment}_{locations}_1950-2014.csv"
+    with open(outfile, mode='w') as f:
         for line in pre_header_lines:
             f.write(line + '\n')
-        odds.to_csv(f, mode='a', header=True, index=True)
+        thresholds.to_csv(f, mode='a', header=True, index=True)
 
 
 if __name__ == '__main__':
@@ -96,7 +98,7 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("infile", type=str, help="input file name")
+    parser.add_argument("infile", type=str, help="input csv file name (i.e. for a given model and experiment)")
     parser.add_argument("metric", type=str, choices=('WSDI', 'SPEI', 'FFDIx', 'FFDIgt90p'), help="input metric")
     parser.add_argument("outdir", type=str, help="output directory")
     args = parser.parse_args()

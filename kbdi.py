@@ -37,12 +37,18 @@ def main(args):
     """Run the program."""
 
     tasmax_ds = xr.open_dataset(args.tasmax_file)
+    if args.ausclip:
+        tasmax_ds = tasmax_ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
     tasmax_ds['tasmax'] = xc.core.units.convert_units_to(tasmax_ds['tasmax'], 'degC')
 
     pr_ds = xr.open_dataset(args.pr_file)
+    if args.ausclip:
+        pr_ds = pr_ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
     pr_ds['pr'] = xc.core.units.convert_units_to(pr_ds['pr'], 'mm/day')
     
     pr_annual_clim_ds = xr.open_dataset(args.pr_annual_clim_file)
+    if args.ausclip:
+        pr_annual_clim_ds = pr_annual_clim_ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
 
     kbdi_da = xc.indices.keetch_byram_drought_index(
         pr_ds['pr'],
@@ -64,5 +70,6 @@ if __name__ == '__main__':
     parser.add_argument("tasmax_file", type=str, help="input daily maximum temperature file")
     parser.add_argument("pr_annual_clim_file", type=str, help="input annual precipitation climatology file")
     parser.add_argument("outfile", type=str, help="output file name")
+    parser.add_argument("--ausclip", action="store_true", default=False, help="Clip lat and lon bounds to Australia")
     args = parser.parse_args()
     main(args)
