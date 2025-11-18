@@ -1,0 +1,12 @@
+Metric: WSDI
+Threshold: Percentiles over the 1950-2014 period
+Model: ACCESS-CM2
+Experiment: ssp245
+Runs: ['r10i1p1f1', 'r1i1p1f1', 'r2i1p1f1', 'r3i1p1f1', 'r4i1p1f1', 'r5i1p1f1', 'r6i1p1f1', 'r7i1p1f1', 'r8i1p1f1', 'r9i1p1f1']
+File history: Tue Nov 18 10:46:04 2025: /g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python likelihoods.py /g/data/xv83/dbi599/rba/WSDI/ACCESS-CM2/ssp245/wsdi_yr_ACCESS-CM2_ssp245_ensemble_aus-states-cities_1850-2100.csv WSDI /g/data/xv83/dbi599/rba/WSDI/ACCESS-CM2/ssp245
+percentile,NSW,VIC,QLD,SA,WA,TAS,NT,AUS,Melbourne,Sydney,Brisbane,Darwin,Perth,Adelaide,Hobart
+90.0,12.54,7.42,17.97,8.93,12.38,4.84,21.14,13.32,7.0,7.0,15.0,27.0,8.0,7.0,6.0
+95.0,15.3,9.24,23.6,11.1,16.56,6.76,27.29,17.23,8.0,9.0,19.55,39.55,14.0,9.0,7.0
+96.7,17.46,11.19,28.36,13.18,18.18,8.54,32.65,19.16,9.0,12.0,24.0,57.0,15.0,11.17,7.0
+97.5,18.13,12.19,31.59,14.51,20.91,8.92,34.59,20.91,13.0,13.0,26.0,63.55,16.0,12.0,7.77
+98.0,18.46,12.64,32.93,15.37,23.12,9.43,36.54,22.61,13.0,14.0,28.0,74.02,18.0,14.0,8.0
