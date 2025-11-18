@@ -45,8 +45,8 @@ def main(args):
 
     # write out likelihoods
     for quantile in quantiles:
-        percentile = quantile * 100
-        plabel = str(percentile).replace('.', '-')
+        percentile = round(quantile * 100, 1)
+        plabel = str(percentile).zfill(4).replace('.', '-')
         if quantile > 0.5:
             df_threshold_test = df_data > thresholds.loc[quantile]
         else:
@@ -75,7 +75,7 @@ def main(args):
             odds.to_csv(f, mode='a', header=True, index=True)
 
     # write out thresholds
-    thresholds.index = thresholds.index * 100
+    thresholds.index = (thresholds.index * 100).round(decimals=1)
     thresholds.index.name = 'percentile'
     thresholds = thresholds.round(decimals=2)
     pre_header_lines = [
