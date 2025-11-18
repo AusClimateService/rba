@@ -38,7 +38,7 @@ def main(args):
     locations = 'aus-states-cities' if args.metric == 'WSDI' else 'aus-states'
 
     if args.metric == "SPEI":
-        quantiles = np.array([0.02, 0.25, 0.33, 0.05, 0.1])
+        quantiles = np.array([0.02, 0.025, 0.033, 0.05, 0.1])
     else:
         quantiles = np.array([0.9, 0.95, 0.967, 0.975, 0.98])
     thresholds = df_ref_data.quantile(quantiles)
