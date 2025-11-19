@@ -32,15 +32,15 @@ def main(args):
     window = nruns * 20
     model = df['model'].unique()[0]
     experiment = df['experiment'].unique()[-1]
-    runs = list(df['run'].unique())
+    runs = ' '.join(list(df['run'].unique()))
     history = cmdprov.new_log()
     metric_label = args.metric.lower()
     locations = 'aus-states-cities' if args.metric == 'WSDI' else 'aus-states'
 
     if args.metric == "SPEI":
-        quantiles = np.array([0.02, 0.025, 0.033, 0.05, 0.1])
+        quantiles = np.array([0.01, 0.02, 0.025, 0.03, 0.033, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1])
     else:
-        quantiles = np.array([0.9, 0.95, 0.967, 0.975, 0.98])
+        quantiles = np.array([0.90, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.967, 0.97, 0.975, 0.98, 0.99])
     thresholds = df_ref_data.quantile(quantiles)
 
     # write out likelihoods
@@ -65,7 +65,7 @@ def main(args):
             f"Model: {model}",
             f"Experiment: {experiment}",
             f"Runs: {runs}",
-            "Description: Probability (%) of exceeding the threshold, calculated empirically across all model runs for a 20-year rolling window centered on each year",
+            "Description: Probability (%) of exceeding the threshold calculated empirically across all model runs for a 20-year rolling window centered on each year",
             f"File history: {history}"
         ]
         outfile = f"{args.outdir}/{metric_label}_yr_{plabel}p-likelihood_{model}_{experiment}_{locations}_{start_year}-{end_year}.csv"

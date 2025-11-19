@@ -14,16 +14,30 @@ The file naming convention for data files uses the following descriptors:
 - `{locations}` is Australian states (`aus-states`) or Australian states and cities (`aus-states-cities`)  
 - `{period}` is the time period spanned by the data (e.g. `1850-2100`)  
 - `{percentile}` the threshold percentile used in likelihood calculations:
+  - `99-0p` is the 99.0 percentile or 1-in-100 year high event
   - `98-0p` is the 98.0 percentile or 1-in-50 year high event
   - `97-5p` is the 97.5 percentile or 1-in-40 year high event
+  - `97-0p` is the 97.0 percentile or 1-in-33 year high event
   - `96-7p` is the 96.7 percentile or 1-in-30 year high event
+  - `96-0p` is the 96.0 percentile or 1-in-25 year high event
   - `95-0p` is the 95.0 percentile or 1-in-20 year high event
+  - `94-0p` is the 94.0 percentile or 1-in-17 year high event
+  - `93-0p` is the 93.0 percentile or 1-in-14 year high event
+  - `92-0p` is the 92.0 percentile or 1-in-13 year high event
+  - `99-0p` is the 91.0 percentile or 1-in-11 year high event
   - `90-0p` is the 90.0 percentile or 1-in-10 year high event
   - `10-0p` is the 10.0 percentile or 1-in-10 year low event
+  - `09-0p` is the 9.0 percentile or 1-in-11 year low event
+  - `08-0p` is the 8.0 percentile or 1-in-13 year low event
+  - `07-0p` is the 7.0 percentile or 1-in-14 year low event
+  - `06-0p` is the 6.0 percentile or 1-in-17 year low event
   - `05-0p` is the 5.0 percentile or 1-in-20 year low event
+  - `04-0p` is the 4.0 percentile or 1-in-25 year low event
   - `03-3p` is the 3.3 percentile or 1-in-30 year low event
+  - `03-0p` is the 3.0 percentile or 1-in-33 year low event
   - `02-5p` is the 2.5 percentile or 1-in-40 year low event
   - `02-0p` is the 2.0 percentile or 1-in-50 year low event
+  - `01-0p` is the 1.0 percentile or 1-in-100 year low event
 
 
 #### Raw data
