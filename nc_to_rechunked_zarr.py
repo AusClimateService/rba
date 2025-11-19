@@ -32,7 +32,7 @@ def define_target_chunks(ds, var):
 def drop_vars(ds):
     """Drop unwanted variables"""
 
-    for var in ['height', 'lat_bnds', 'lon_bnds']:
+    for var in ['height', 'lat_bnds', 'lon_bnds', 'sigma', 'model_level_number', 'level_height', 'crs']:
         try:
             ds = ds.drop_vars(var)
         except ValueError:
