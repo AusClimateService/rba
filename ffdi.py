@@ -41,6 +41,8 @@ def main(args):
     # Drought Factor
     kbdi_ds = xr.open_mfdataset(args.kbdi_files, attrs_file=args.kbdi_files[-1])
     kbdi_ds = kbdi_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
+    if args.test_region:
+        kbdi_ds = kbdi_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
     assert len(np.unique(kbdi_ds['time'].dt.year)) == nyears
     ntime = len(kbdi_ds['KBDI'].time)
     nlat = len(kbdi_ds['KBDI'].lat)
@@ -49,6 +51,8 @@ def main(args):
     
     pr_ds = xr.open_dataset(args.pr_zarr, engine='zarr')
     pr_ds = pr_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
+    if args.test_region:
+        pr_ds = pr_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
     assert len(np.unique(pr_ds['time'].dt.year)) == nyears
     pr_ds['pr'] = xc.core.units.convert_units_to(pr_ds['pr'], 'mm/day')
     
@@ -58,15 +62,24 @@ def main(args):
     tasmax_ds = xr.open_dataset(args.tasmax_zarr, engine='zarr')
     #tasmax_ds['tasmax'] = xc.core.units.convert_units_to(tasmax_ds['tasmax'], 'degC')
     tasmax_ds = tasmax_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
+    if args.test_region:
+        tasmax_ds = tasmax_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
     assert len(np.unique(tasmax_ds['time'].dt.year)) == nyears
+    tasmax_ds['time'] = df_da['time']
 
     hursmin_ds = xr.open_dataset(args.hursmin_zarr, engine='zarr')
     hursmin_ds = hursmin_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
+    if args.test_region:
+        hursmin_ds = hursmin_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
     assert len(np.unique(hursmin_ds['time'].dt.year)) == nyears
+    hursmin_ds['time'] = df_da['time']
 
     sfcWindmax_ds = xr.open_dataset(args.sfcWindmax_zarr, engine='zarr')
     sfcWindmax_ds = sfcWindmax_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
+    if args.test_region:
+        sfcWindmax_ds = sfcWindmax_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
     assert len(np.unique(sfcWindmax_ds['time'].dt.year)) == nyears
+    sfcWindmax_ds['time'] = df_da['time']
 
     ffdi_da = xc.indices.mcarthur_forest_fire_danger_index(
         df_da,
@@ -83,7 +96,7 @@ def main(args):
     FFDIx_ds.attrs = ffdi_ds.attrs
     FFDIx_ds.to_netcdf(args.FFDIx_outfile)
 
-    FFDI99p_da = ffdi_ds['FFDI'].sel(time=slice('1950-01-01', '2014-12-31')).quantile(0.99, dim='time')
+    FFDI99p_da = ffdi_ds['FFDI'].sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31')).quantile(0.99, dim='time')
     FFDIgt99p_da = ffdi_ds['FFDI'] > FFDI99p_da
     FFDIgt99p_da = FFDIgt99p_da.resample({'time': 'YE'}).sum('time', keep_attrs=True)
     FFDIgt99p_ds = FFDIgt99p_da.to_dataset(name='FFDIgt99p')
@@ -105,5 +118,6 @@ if __name__ == '__main__':
     parser.add_argument("--hursmin_zarr", type=str, required=True, help="input daily minimum relative humidity zarr collection")
     parser.add_argument("--sfcWindmax_zarr", type=str, required=True, help="input daily maximum surface wind speed zarr collection")
     parser.add_argument("--kbdi_files", type=str, required=True, nargs='*', help="input daily Keetch-Byram Drought Index files")
+    parser.add_argument("--test_region", action="store_true", default=False, help="process a small test region")
     args = parser.parse_args()
     main(args)
