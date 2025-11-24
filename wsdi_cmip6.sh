@@ -30,7 +30,7 @@ fi
 outdir=/g/data/xv83/dbi599/rba/WSDI/${model}/${ssp}
 
 histfiles=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmax/${grid}/${version}/*.nc`)
-sspfiles=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmax/${grid}/${version}/*.nc`)
+sspfiles=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmax/${grid}/${version}/*20??????-????????.nc`)
 nc_outfile=wsdi_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_outfile=wsdi_yr_${model}_${ssp}_${run}_aus-states-cities_1850-2100.csv
     

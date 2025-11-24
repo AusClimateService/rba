@@ -32,7 +32,7 @@ spei_dir=/g/data/xv83/dbi599/rba/SPEI/${model}/${ssp}
 # Potential evapotranspiration (evspsblpot)
 
 tasmin_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmin/${grid}/${version}/*.nc`)
-tasmin_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmin/${grid}/${version}/*.nc`)
+tasmin_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmin/${grid}/${version}/*20??????-????????.nc`)
 tasmin_files=( "${tasmin_hist_files[@]}" "${tasmin_ssp_files[@]}" )
 method=hargreaves85
 evspsblpot_files=()
@@ -54,7 +54,7 @@ done
 # SPEI
 
 pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${version}/*.nc`)
-pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*.nc`)
+pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*20??????-????????.nc`)
 spei_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 
