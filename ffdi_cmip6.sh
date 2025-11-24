@@ -43,7 +43,7 @@ pr_clim_command="${python} /home/599/dbi599/rba/pr_climatology.py ${pr_hist_file
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${ffdi_dir}
     echo ${pr_clim_command}
-#    ${pr_clim_command}
+    ${pr_clim_command}
 else
     echo ${pr_clim_command}
 fi
@@ -57,7 +57,7 @@ for pr_path in "${pr_files[@]}"; do
     kbdi_command="${python} /home/599/dbi599/rba/kbdi.py ${pr_path} ${tasmax_path} ${pr_clim_path} ${kbdi_path}"
     if [[ "${flags}" == "-e" ]] ; then
         echo ${kbdi_command}
-#        ${kbdi_command}
+        ${kbdi_command}
     else
         echo ${kbdi_command}
     fi 
@@ -78,9 +78,7 @@ for var in pr tasmax hursmin sfcWindmax; do
     zarr_command="/g/data/xv83/dbi599/miniconda3/envs/agcd/bin/python /home/599/dbi599/rba/nc_to_rechunked_zarr.py ${hist_files[@]} ${ssp_files[@]} ${var} ${zarr_file} /g/data/xv83/dbi599/rba/temp.zarr"
     if [[ "${flags}" == "-e" ]] ; then
         echo ${zarr_command}
-        if [[ "${var}" == "pr" ]] ; then
-            ${zarr_command}
-        fi
+        ${zarr_command}
     else
         echo ${zarr_command}
     fi
