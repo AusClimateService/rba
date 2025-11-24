@@ -1,8 +1,8 @@
 #!/bin/bash
 #PBS -P xv83
 #PBS -q hugemem
-#PBS -l walltime=10:00:00
-#PBS -l mem=500GB
+#PBS -l walltime=20:00:00
+#PBS -l mem=300GB
 #PBS -l storage=gdata/xv83+gdata/ia39+gdata/ob53
 #PBS -l wd
 #PBS -l ncpus=1
@@ -13,8 +13,8 @@
 
 # Resouces:
 #  WSDI: 2 hours, 200GB
-#  SPEI: 2 hours, 200GB
-
+#  SPEI: 15 hours, 100GB
+#  FFDI: 21 hours, 1000GB (for precip climatology)
 
 __conda_setup="$('/g/data/xv83/dbi599/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then

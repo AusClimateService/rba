@@ -11,7 +11,7 @@ flags=$1
 python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 
 indir=/g/data/ob53/BARRA2/output/reanalysis/AUS-11/BOM/ERA5/historical/hres/BARRA-R2/v1/day
-indir2=/g/data/ia39/australian-climate-service/test-data/observations/BARRA2/output/reanalysis/AUS-11/BOM/ERA5/historical/hres/BARRA-R2/v1/day/
+indir2=/g/data/ia39/australian-climate-service/test-data/observations/BARRA2/output/reanalysis/AUS-11/BOM/ERA5/historical/hres/BARRA-R2/v1/day
 ffdi_dir=/g/data/xv83/dbi599/rba/FFDI/BARRA-R2
 
 # Keetch-Byram Drought Index (KBDI)
@@ -77,7 +77,7 @@ FFDIgt99p_nc_path=${ffdi_dir}/FFDIgt99p_yr_BARRA-R2_AUST-11_1980-2024.nc
 FFDIx_csv_path=${ffdi_dir}/FFDIx_yr_BARRA-R2_aus-states_1980-2024.csv
 FFDIgt99p_csv_path=${ffdi_dir}/FFDIgt99p_yr_BARRA-R2_aus-states_1980-2024.csv
 
-ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]}"
+ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]} --start_year 1980 --end_year 2024"
 FFDIx_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIx_nc_path} FFDIx ${FFDIx_csv_path} --mask_arid"
 FFDIgt99p_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIgt99p_nc_path} FFDIgt99p ${FFDIgt99p_csv_path} --mask_arid"
 if [[ "${flags}" == "-e" ]] ; then
