@@ -73,5 +73,10 @@ fi
 if [[ "${flags}" == "-c" ]] ; then
     rm ${evspsblpot_files[@]}
     rm ${spei_path}
+    rm ${csv_path}
+else
+    echo rm ${evspsblpot_files[@]}
+    echo rm ${spei_path}
+    echo rm ${csv_path}
 fi
 

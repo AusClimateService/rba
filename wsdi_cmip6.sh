@@ -49,6 +49,10 @@ fi
 
 if [[ "${flags}" == "-c" ]] ; then
     rm ${outdir}/${nc_outfile}
+    rm ${outdir}/${csv_outfile}
+else
+    echo rm ${outdir}/${nc_outfile}
+    echo rm ${outdir}/${csv_outfile}
 fi
 
 

@@ -116,6 +116,21 @@ if [[ "${flags}" == "-c" ]] ; then
     rm -r ${tasmax_zarr_file}
     rm -r ${hursmin_zarr_file}
     rm -r ${sfcWindmax_zarr_file}
+    rm ${FFDIx_nc_path}
+    rm ${FFDIgt99p_nc_path}
+    rm ${FFDIx_csv_path}
+    rm ${FFDIgt99p_csv_path}
+else
+    echo rm ${pr_clim_path}
+    echo rm ${kbdi_files[@]}
+    echo rm -r ${pr_zarr_file}
+    echo rm -r ${tasmax_zarr_file}
+    echo rm -r ${hursmin_zarr_file}
+    echo rm -r ${sfcWindmax_zarr_file}
+    echo rm ${FFDIx_nc_path}
+    echo rm ${FFDIgt99p_nc_path}
+    echo rm ${FFDIx_csv_path}
+    echo rm ${FFDIgt99p_csv_path}
 fi
 
 
