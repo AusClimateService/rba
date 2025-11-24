@@ -1,5 +1,5 @@
 """Command line program for calculating the annual precipitation climatology"""
-
+import pdb
 import argparse
 
 import numpy as np
@@ -16,7 +16,13 @@ def main(args):
     """Run the program."""
 
     ds = xr.open_mfdataset(args.infiles)
-    if args.ausclip:
+    try:
+        ds = ds.drop_vars(['crs',])
+    except:
+        pass
+    if args.test_region:
+        ds = ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
+    elif args.ausclip:
         ds = ds.sel({'lat': slice(-44.5, -10), 'lon': slice(112, 156.25)})
     ds['pr'] = xc.core.units.convert_units_to(ds['pr'], 'mm/day')
     ds = ds.sel(time=slice(args.start_date, args.end_date))
@@ -25,6 +31,7 @@ def main(args):
     ds_annual['pr'].attrs['long_name'] = 'Precipitation'
     ds_annual['pr'].attrs['standard_name'] = 'precipitation_flux'
     ds_annual.attrs = ds.attrs
+    ds_annual.attrs['history'] = cmdprov.new_log()
     ds_annual.to_netcdf(args.outfile)
 
 
@@ -38,5 +45,6 @@ if __name__ == '__main__':
     parser.add_argument("end_date", type=str, help="end date in YYYY-MM-DD format")
     parser.add_argument("outfile", type=str, help="output file name")
     parser.add_argument("--ausclip", action="store_true", default=False, help="Clip lat and lon bounds to Australia")
+    parser.add_argument("--test_region", action="store_true", default=False, help="process a small test region")
     args = parser.parse_args()
     main(args)

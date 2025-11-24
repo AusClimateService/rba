@@ -99,7 +99,7 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("infile", type=str, help="input csv file name (i.e. for a given model and experiment)")
-    parser.add_argument("metric", type=str, choices=('WSDI', 'SPEI', 'FFDIx', 'FFDIgt90p'), help="input metric")
+    parser.add_argument("metric", type=str, choices=('WSDI', 'SPEI', 'FFDIx', 'FFDIgt99p'), help="input metric")
     parser.add_argument("outdir", type=str, help="output directory")
     args = parser.parse_args()
     main(args)
