@@ -211,7 +211,7 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("infile", type=str, help="input file name")
-    parser.add_argument("var", type=str, help="input file name")
+    parser.add_argument("var", type=str, help="input variable")
     parser.add_argument("outfile", type=str, help="output file name")
     parser.add_argument("--mask_arid", action="store_true", default=False, help="mask arid areas")
     parser.add_argument("--add_cities", action="store_true", default=False, help="add cities to the output file")
