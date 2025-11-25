@@ -1,5 +1,5 @@
 """Command line program for converting from netCDF to csv with spatial aggregation"""
-
+import pdb
 import argparse
 
 import numpy as np
@@ -165,7 +165,7 @@ def model_fixes(ds):
         ds = subset_lat(ds, [-48, -5])
         ds = subset_lon(ds, [105, 160])
         ds['lat'] = np.round(ds['lat'], 2)
-    elif model == 'MPI-ESM1-2-LR':
+    elif model in ['MPI-ESM1-2-LR', 'EC-Earth3-Veg', 'EC-Earth3']:
         ds = subset_lat(ds, [-48, -5])
         lat_start = np.round(ds.lat.values[0], 2)
         lat_end = np.round(ds.lat.values[-1], 2)
