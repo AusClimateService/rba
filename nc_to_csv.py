@@ -1,5 +1,5 @@
 """Command line program for converting from netCDF to csv with spatial aggregation"""
-import pdb
+
 import argparse
 
 import numpy as np
@@ -152,6 +152,7 @@ def add_cities(da, df):
         city_da = da.sel({'lat': lat, 'lon': lon}, method='nearest')
         city_series = city_da.to_pandas()
         city_series.name = city
+        city_series.index = df.index
         df[city] = city_series
 
     return df
