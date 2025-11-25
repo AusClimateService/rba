@@ -37,7 +37,10 @@ tasmin_files=( "${tasmin_hist_files[@]}" "${tasmin_ssp_files[@]}" )
 method=hargreaves85
 evspsblpot_files=()
 for tasmin_path in "${tasmin_files[@]}"; do
+    vtasmin=`echo ${tasmin_path} | cut -d / -f 15`
     tasmax_path=`echo ${tasmin_path} | sed s:tasmin:tasmax:g`
+    tasmax_path=`echo ${tasmax_path} | sed s:${vtasmin}:${version}:`
+    tasmax_path=`ls ${tasmax_path}`
     evspsblpot_file=`basename ${tasmin_path} | sed s:tasmin:evspsblpot-${method}:g`
     evspsblpot_path=${spei_dir}/${evspsblpot_file}
     evspsblpot_files+=(${evspsblpot_path})

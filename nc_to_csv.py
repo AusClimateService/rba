@@ -190,6 +190,8 @@ def main(args):
 
     spatial_means = ds[args.var].weighted(frac * weights).mean(dim=("lat", "lon"))
     df = spatial_means.to_pandas()
+    if type(df.index) == xr.coding.cftimeindex.CFTimeIndex:
+        df.index = df.index.to_datetimeindex()
     df.columns = spatial_means['abbrevs']
     if args.add_cities:
         df = add_cities(ds[args.var], df)

@@ -30,8 +30,9 @@ def main(args):
     wb = pr_ds['pr'] - evspsblpot_ds['evspsblpot']
     wb.attrs['units'] = pr_ds['pr'].attrs['units']
 
+    cal_end = '2014-12-30' if pr_ds.time.dt.calendar == '360_day' else '2014-12-31'
     spei_da = xc.indices.standardized_precipitation_evapotranspiration_index(
-        wb, freq='MS', window=12, cal_start='1950-01-01', cal_end='2014-12-31', dist=args.dist,
+        wb, freq='MS', window=12, cal_start='1950-01-01', cal_end=cal_end, dist=args.dist,
     )   
 
     spei_ds = spei_da.to_dataset(name='SPEI')
