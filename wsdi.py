@@ -22,8 +22,9 @@ def main(args):
         ds = xr.open_mfdataset(args.infiles, attrs_file=args.infiles[-1])
     ds['tasmax'] = xc.core.units.convert_units_to(ds['tasmax'], 'degC')
     
+    time_end = '2014-12-30' if ds.time.dt.calendar == '360_day' else '2014-12-31'
     tx90 = xc.core.calendar.percentile_doy(
-        ds['tasmax'].sel(time=slice('1950-01-01', '2014-12-31')),
+        ds['tasmax'].sel(time=slice('1950-01-01', time_end)),
         window=5,
         per=90
     )
