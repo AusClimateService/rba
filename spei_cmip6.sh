@@ -7,7 +7,8 @@
 #   ssp:             ssp126 ssp245 ssp370 ssp585
 #   run:             r?i?p?i?
 #   grid:            gn
-#   version:         vYYYYMMDD or 'v*'
+#   hversion:        historical experiment version (vYYYYMMDD or 'v*')
+#   sversion:        ssp experiment version (vYYYYMMDD or 'v*')
 #   flags:           optional flags (e.g. -e for execute; -c for clean up)
 #
 
@@ -15,8 +16,9 @@ model=$1
 ssp=$2
 run=$3
 grid=$4
-version=$5
-flags=$6
+hversion=$5
+sversion=$6
+flags=$7
 
 python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 
@@ -31,15 +33,14 @@ spei_dir=/g/data/xv83/dbi599/rba/SPEI/${model}/${ssp}
 
 # Potential evapotranspiration (evspsblpot)
 
-tasmin_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmin/${grid}/${version}/*.nc`)
-tasmin_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmin/${grid}/${version}/*20??????-????????.nc`)
-tasmin_files=( "${tasmin_hist_files[@]}" "${tasmin_ssp_files[@]}" )
 method=hargreaves85
 evspsblpot_files=()
-for tasmin_path in "${tasmin_files[@]}"; do
+
+tasmin_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmin/${grid}/${hversion}/*.nc`)
+for tasmin_path in "${tasmin_hist_files[@]}"; do
     vtasmin=`echo ${tasmin_path} | cut -d / -f 15`
     tasmax_path=`echo ${tasmin_path} | sed s:tasmin:tasmax:g`
-    tasmax_path=`echo ${tasmax_path} | sed s:${vtasmin}:${version}:`
+    tasmax_path=`echo ${tasmax_path} | sed s:${vtasmin}:${hversion}:`
     tasmax_path=`ls ${tasmax_path}`
     evspsblpot_file=`basename ${tasmin_path} | sed s:tasmin:evspsblpot-${method}:g`
     evspsblpot_path=${spei_dir}/${evspsblpot_file}
@@ -54,10 +55,30 @@ for tasmin_path in "${tasmin_files[@]}"; do
     fi 
 done
 
+tasmin_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmin/${grid}/${sversion}/*20??????-????????.nc`)
+for tasmin_path in "${tasmin_ssp_files[@]}"; do
+    vtasmin=`echo ${tasmin_path} | cut -d / -f 15`
+    tasmax_path=`echo ${tasmin_path} | sed s:tasmin:tasmax:g`
+    tasmax_path=`echo ${tasmax_path} | sed s:${vtasmin}:${sversion}:`
+    tasmax_path=`ls ${tasmax_path}`
+    evspsblpot_file=`basename ${tasmin_path} | sed s:tasmin:evspsblpot-${method}:g`
+    evspsblpot_path=${spei_dir}/${evspsblpot_file}
+    evspsblpot_files+=(${evspsblpot_path})
+    command="${python} /home/599/dbi599/rba/evspsblpot.py ${evspsblpot_path} ${method} --tasmin_file ${tasmin_path} --tasmax_file ${tasmax_path}"
+    if [[ "${flags}" == "-e" ]] ; then
+        mkdir -p ${spei_dir}
+        echo ${command}
+        ${command}
+    else
+        echo ${command}
+    fi 
+done
+
+
 # SPEI
 
-pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${version}/*.nc`)
-pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*20??????-????????.nc`)
+pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${hversion}/*.nc`)
+pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${sversion}/*20??????-????????.nc`)
 spei_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 

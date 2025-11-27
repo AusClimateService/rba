@@ -76,19 +76,25 @@ fi
 for run in "${runs[@]}"; do
 
     if [[ "${model}" == "UKESM1-0-LL" ]] && [[ "${run}" == "r4i1p1f2" ]] && [[ "${ssp}" == "ssp585" ]] ; then
-        version=v20211201
+        hversion=${default_version}
+        sversion=v20211201
+    elif [[ "${model}" == "UKESM1-0-LL" ]] && [[ "${run}" == "r4i1p1f2" ]] && [[ "${ssp}" == "ssp126" ]] ; then
+        hversion=${default_version}
+        sversion=v20190815
     elif [[ "${model}" == "EC-Earth3" ]] && [[ "${run}" == "r9i1p1f1" ]] && [[ "${ssp}" == "ssp126" ]] ; then
-        version=v20200514
+        hversion=v20200514
+        sversion=v20200514
     else
-        version=${default_version}
+        hversion=${default_version}
+        sversion=${default_version}
     fi
 
     if [[ "${job}" == "test" ]] ; then
-        command="bash ${metric}_cmip6.sh ${model} ${ssp} ${run} ${grid} ${version}"
+        command="bash ${metric}_cmip6.sh ${model} ${ssp} ${run} ${grid} ${hversion} ${sversion}"
     elif [[ "${job}" == "calc" ]] ; then
-        command="qsub -v metric=${metric},model=${model},ssp=${ssp},run=${run},grid=${grid},version=${version} cmip6.job"
+        command="qsub -v metric=${metric},model=${model},ssp=${ssp},run=${run},grid=${grid},hversion=${hversion},sversion=${sversion} cmip6.job"
     elif [[ "${job}" == "clean" ]] ; then
-        command="bash ${metric}_cmip6.sh ${model} ${ssp} ${run} ${grid} ${version} -c"
+        command="bash ${metric}_cmip6.sh ${model} ${ssp} ${run} ${grid} ${hversion} ${sversion} -c"
     fi
     if [[ "${flags}" == "-n" ]] ; then
         echo ${command}

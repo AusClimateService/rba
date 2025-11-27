@@ -1,13 +1,14 @@
 #
 # Bash script for calculating WDSI from CMIP6 data
 #
-# Usage: bash wsdi_cmip6.sh {model} {ssp} {run} {grid} {version} {flags}
+# Usage: bash wsdi_cmip6.sh {model} {ssp} {run} {grid} {hversion} {sversion} {flags}
 #
 #   model:           ACCESS-ESM1-5
 #   ssp:             ssp126 ssp245 ssp370 ssp585
 #   run:             r?i?p?i?
 #   grid:            gn
-#   version:         vYYYYMMDD or 'v*'
+#   hversion:        historical experiment version (vYYYYMMDD or 'v*')
+#   sversion:        ssp experiment version (vYYYYMMDD or 'v*')
 #   flags:           optional flags (e.g. -e for execute; -c for clean up)
 #
 
@@ -15,8 +16,9 @@ model=$1
 ssp=$2
 run=$3
 grid=$4
-version=$5
-flags=$6
+hversion=$5
+sversion=$6
+flags=$7
 
 python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 
@@ -29,8 +31,8 @@ else
 fi
 outdir=/g/data/xv83/dbi599/rba/WSDI/${model}/${ssp}
 
-histfiles=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmax/${grid}/${version}/*.nc`)
-sspfiles=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmax/${grid}/${version}/*20??????-????????.nc`)
+histfiles=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmax/${grid}/${hversion}/*.nc`)
+sspfiles=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmax/${grid}/${sversion}/*20??????-????????.nc`)
 nc_outfile=wsdi_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_outfile=wsdi_yr_${model}_${ssp}_${run}_aus-states-cities_1850-2100.csv
     
@@ -54,10 +56,4 @@ else
     echo rm ${outdir}/${nc_outfile}
     echo rm ${outdir}/${csv_outfile}
 fi
-
-
-
-
-
-
 

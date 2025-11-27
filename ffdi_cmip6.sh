@@ -1,13 +1,14 @@
 #
 # Bash script for calculating FFDI from CMIP6 data
 #
-# Usage: bash ffdi_cmip6.sh {model} {ssp} {run} {grid} {version} {flags}
+# Usage: bash ffdi_cmip6.sh {model} {ssp} {run} {grid} {hversion} {sversion} {flags}
 #
 #   model:           ACCESS-ESM1-5
 #   ssp:             ssp126 ssp245 ssp370 ssp585
 #   run:             r?i?p?i?
 #   grid:            gn
-#   version:         vYYYYMMDD or 'v*'
+#   hversion:        historical experiment version (vYYYYMMDD or 'v*')
+#   sversion:        ssp experiment version (vYYYYMMDD or 'v*')
 #   flags:           optional flags (e.g. -e for execute; -c for clean up)
 #
 
@@ -15,8 +16,9 @@ model=$1
 ssp=$2
 run=$3
 grid=$4
-version=$5
-flags=$6
+hversion=$5
+sversion=$6
+flags=$7
 
 python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 
@@ -34,8 +36,8 @@ ffdi_dir=/g/data/xv83/dbi599/rba/FFDI/${model}/${ssp}
 
 # Keetch-Byram Drought Index (KBDI)
 
-pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${version}/*.nc`)
-pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${version}/*_20??????-????????.nc`)
+pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${hversion}/*.nc`)
+pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${sversion}/*_20??????-????????.nc`)
 pr_files=( "${pr_hist_files[@]}" "${pr_ssp_files[@]}" )
 
 pr_clim_path=${ffdi_dir}/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
@@ -66,8 +68,8 @@ done
 # Zarr
 
 for var in pr tasmax hursmin sfcWindmax; do
-    hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/${var}/${grid}/${version}/*.nc`)
-    ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/${var}/${grid}/${version}/*_20??????-????????.nc`)
+    hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/${var}/${grid}/${hversion}/*.nc`)
+    ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/${var}/${grid}/${sversion}/*_20??????-????????.nc`)
     hist_dates=`basename "${hist_files[0]}" | cut -d _ -f 7`
     start_date=`echo ${hist_dates} | cut -d - -f 1`
     ssp_dates=`basename "${ssp_files[-1]}" | cut -d _ -f 7`
