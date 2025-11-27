@@ -1,8 +1,8 @@
 #!/bin/bash
 #PBS -P xv83
-#PBS -q normal
-#PBS -l walltime=5:00:00
-#PBS -l mem=100GB
+#PBS -q hugemem
+#PBS -l walltime=10:00:00
+#PBS -l mem=300GB
 #PBS -l storage=gdata/xv83+gdata/ia39+gdata/fs38+gdata/oi10
 #PBS -l wd
 #PBS -l ncpus=1

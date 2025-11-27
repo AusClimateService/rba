@@ -82,7 +82,7 @@ for run in "${runs[@]}"; do
         hversion=${default_version}
         sversion=v20190815
     elif [[ "${model}" == "EC-Earth3" ]] && [[ "${run}" == "r9i1p1f1" ]] && [[ "${ssp}" == "ssp126" ]] ; then
-        hversion=v20200514
+        hversion=${default_version}
         sversion=v20200514
     else
         hversion=${default_version}
