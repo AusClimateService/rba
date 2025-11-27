@@ -49,7 +49,7 @@ def main(args):
     nlon = len(kbdi_ds['KBDI'].lon)
     kbdi_ds = kbdi_ds.chunk({'time': ntime, 'lat': nlat, 'lon': nlon})
     
-    pr_ds = xr.open_dataset(args.pr_zarr, engine='zarr')
+    pr_ds = xr.open_dataset(args.pr_data)
     pr_ds = pr_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
     if args.test_region:
         pr_ds = pr_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
@@ -59,7 +59,7 @@ def main(args):
     df_da = xc.indices.griffiths_drought_factor(pr_ds['pr'], kbdi_ds['KBDI'])
 
     # FFDI
-    tasmax_ds = xr.open_dataset(args.tasmax_zarr, engine='zarr')
+    tasmax_ds = xr.open_dataset(args.tasmax_data)
     #tasmax_ds['tasmax'] = xc.core.units.convert_units_to(tasmax_ds['tasmax'], 'degC')
     tasmax_ds = tasmax_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
     if args.test_region:
@@ -67,14 +67,14 @@ def main(args):
     assert len(np.unique(tasmax_ds['time'].dt.year)) == nyears
     tasmax_ds['time'] = df_da['time']
 
-    hursmin_ds = xr.open_dataset(args.hursmin_zarr, engine='zarr')
+    hursmin_ds = xr.open_dataset(args.hursmin_data)
     hursmin_ds = hursmin_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
     if args.test_region:
         hursmin_ds = hursmin_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
     assert len(np.unique(hursmin_ds['time'].dt.year)) == nyears
     hursmin_ds['time'] = df_da['time']
 
-    sfcWindmax_ds = xr.open_dataset(args.sfcWindmax_zarr, engine='zarr')
+    sfcWindmax_ds = xr.open_dataset(args.sfcWindmax_data)
     sfcWindmax_ds = sfcWindmax_ds.sel(time=slice(f'{args.start_year}-01-01', f'{args.end_year}-12-31'))
     if args.test_region:
         sfcWindmax_ds = sfcWindmax_ds.sel({'lat': slice(-30, -25), 'lon': slice(130, 135)})
@@ -113,10 +113,10 @@ if __name__ == '__main__':
     parser.add_argument("FFDIgt99p_outfile", type=str, help="FFDIgt99p output file name")
     parser.add_argument("--start_year", default=1850, type=int, help="Start year")
     parser.add_argument("--end_year", default=2100, type=int, help="End year")
-    parser.add_argument("--pr_zarr", type=str, required=True, help="input daily precipitation zarr collection")
-    parser.add_argument("--tasmax_zarr", type=str, required=True, help="input daily maximum temperature zarr collection")
-    parser.add_argument("--hursmin_zarr", type=str, required=True, help="input daily minimum relative humidity zarr collection")
-    parser.add_argument("--sfcWindmax_zarr", type=str, required=True, help="input daily maximum surface wind speed zarr collection")
+    parser.add_argument("--pr_data", type=str, required=True, help="input daily precipitation data (single netCDF file or zarr collection)")
+    parser.add_argument("--tasmax_data", type=str, required=True, help="input daily maximum temperature data (single netCDF file or zarr collection)")
+    parser.add_argument("--hursmin_data", type=str, required=True, help="input daily minimum relative humidity data (single netCDF file or zarr collection)")
+    parser.add_argument("--sfcWindmax_data", type=str, required=True, help="input daily maximum surface wind speed data (single netCDF file or zarr collection)")
     parser.add_argument("--kbdi_files", type=str, required=True, nargs='*', help="input daily Keetch-Byram Drought Index files")
     parser.add_argument("--test_region", action="store_true", default=False, help="process a small test region")
     args = parser.parse_args()

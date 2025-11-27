@@ -41,7 +41,7 @@ pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${g
 pr_files=( "${pr_hist_files[@]}" "${pr_ssp_files[@]}" )
 
 pr_clim_path=${ffdi_dir}/pr_yr-climatology_${model}_historical_${run}_${grid}_1950-2014.nc
-pr_clim_command="${python} /home/599/dbi599/rba/pr_climatology.py ${pr_hist_files[@]} 1950-01-01 2014-12-31 ${pr_clim_path}"
+pr_clim_command="${python} /home/599/dbi599/rba/pr_climatology.py ${pr_hist_files[@]} 1950-01-01 2014-12-31 ${pr_clim_path} --ausclip"
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${ffdi_dir}
     echo ${pr_clim_command}
@@ -56,7 +56,7 @@ for pr_path in "${pr_files[@]}"; do
     kbdi_file=`basename ${pr_path} | sed s:pr:kbdi:g`
     kbdi_path=${ffdi_dir}/${kbdi_file}
     kbdi_files+=(${kbdi_path})
-    kbdi_command="${python} /home/599/dbi599/rba/kbdi.py ${pr_path} ${tasmax_path} ${pr_clim_path} ${kbdi_path}"
+    kbdi_command="${python} /home/599/dbi599/rba/kbdi.py ${pr_path} ${tasmax_path} ${pr_clim_path} ${kbdi_path} --ausclip"
     if [[ "${flags}" == "-e" ]] ; then
         echo ${kbdi_command}
         ${kbdi_command}
@@ -65,7 +65,7 @@ for pr_path in "${pr_files[@]}"; do
     fi 
 done
 
-# Zarr
+# Concat netCDF files
 
 for var in pr tasmax hursmin sfcWindmax; do
     hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/${var}/${grid}/${hversion}/*.nc`)
@@ -75,14 +75,14 @@ for var in pr tasmax hursmin sfcWindmax; do
     ssp_dates=`basename "${ssp_files[-1]}" | cut -d _ -f 7`
     end_date=`echo ${ssp_dates} | cut -d - -f 2`
     end_date=`echo ${end_date} | cut -d . -f 1`
-    zarr_file=${ffdi_dir}/${var}_day_${model}_${ssp}_${run}_${grid}_${start_date}-${end_date}.zarr
-    declare ${var}_zarr_file=${zarr_file}
-    zarr_command="/g/data/xv83/dbi599/miniconda3/envs/agcd/bin/python /home/599/dbi599/rba/nc_to_rechunked_zarr.py ${hist_files[@]} ${ssp_files[@]} ${var} ${zarr_file} /g/data/xv83/dbi599/rba/temp.zarr"
+    concat_file=${ffdi_dir}/${var}_day_${model}_${ssp}_${run}_${grid}_${start_date}-${end_date}.nc
+    declare ${var}_file=${concat_file}
+    concat_command="/g/data/xv83/dbi599/miniconda3/envs/agcd/bin/python /home/599/dbi599/rba/nc_concat.py ${hist_files[@]} ${ssp_files[@]} ${concat_file} --ausclip"
     if [[ "${flags}" == "-e" ]] ; then
-        echo ${zarr_command}
-        ${zarr_command}
+        echo ${concat_command}
+        ${concat_command}
     else
-        echo ${zarr_command}
+        echo ${concat_command}
     fi
 done
 
@@ -93,7 +93,7 @@ FFDIgt99p_nc_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_${grid}_${star
 FFDIx_csv_path=${ffdi_dir}/FFDIx_yr_${model}_${ssp}_${run}_aus-states_${start}-2100.csv
 FFDIgt99p_csv_path=${ffdi_dir}/FFDIgt99p_yr_${model}_${ssp}_${run}_aus-states_${start}-2100.csv
 
-ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_zarr ${pr_zarr_file} --tasmax_zarr ${tasmax_zarr_file} --hursmin_zarr ${hursmin_zarr_file} --sfcWindmax_zarr ${sfcWindmax_zarr_file} --kbdi_files ${kbdi_files[@]} --start_year ${start}"
+ffdi_command="${python} /home/599/dbi599/rba/ffdi.py ${FFDIx_nc_path} ${FFDIgt99p_nc_path} --pr_data ${pr_file} --tasmax_data ${tasmax_file} --hursmin_data ${hursmin_file} --sfcWindmax_data ${sfcWindmax_file} --kbdi_files ${kbdi_files[@]} --start_year ${start}"
 FFDIx_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIx_nc_path} FFDIx ${FFDIx_csv_path} --mask_arid"
 FFDIgt99p_csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${FFDIgt99p_nc_path} FFDIgt99p ${FFDIgt99p_csv_path} --mask_arid"
 if [[ "${flags}" == "-e" ]] ; then
@@ -114,10 +114,10 @@ fi
 if [[ "${flags}" == "-c" ]] ; then
     rm ${pr_clim_path}
     rm ${kbdi_files[@]}
-    rm -r ${pr_zarr_file}
-    rm -r ${tasmax_zarr_file}
-    rm -r ${hursmin_zarr_file}
-    rm -r ${sfcWindmax_zarr_file}
+    rm -r ${pr_file}
+    rm -r ${tasmax_file}
+    rm -r ${hursmin_file}
+    rm -r ${sfcWindmax_file}
     rm ${FFDIx_nc_path}
     rm ${FFDIgt99p_nc_path}
     rm ${FFDIx_csv_path}
@@ -125,10 +125,10 @@ if [[ "${flags}" == "-c" ]] ; then
 else
     echo rm ${pr_clim_path}
     echo rm ${kbdi_files[@]}
-    echo rm -r ${pr_zarr_file}
-    echo rm -r ${tasmax_zarr_file}
-    echo rm -r ${hursmin_zarr_file}
-    echo rm -r ${sfcWindmax_zarr_file}
+    echo rm -r ${pr_file}
+    echo rm -r ${tasmax_file}
+    echo rm -r ${hursmin_file}
+    echo rm -r ${sfcWindmax_file}
     echo rm ${FFDIx_nc_path}
     echo rm ${FFDIgt99p_nc_path}
     echo rm ${FFDIx_csv_path}
