@@ -2,14 +2,72 @@
 
 import argparse
 
+import numpy as np
+import xesmf as xe
 import xarray as xr
 import cmdline_provenance as cmdprov
+
+
+def xesmf_regrid(ds, variable=None):
+    """Regrid data using xesmf directly.
+    
+    Parameters
+    ----------
+    ds : xarray Dataset
+        Dataset to be regridded
+    ds_grid : xarray Dataset
+        Dataset containing target horizontal grid
+    variable : str, optional
+        Variable to restore attributes for
+    method : str, default bilinear
+        Method for regridding
+    
+    Returns
+    -------
+    ds : xarray Dataset
+    
+    """
+    
+    global_attrs = ds.attrs
+    if variable:
+        var_attrs = ds[variable].attrs
+    #ds_grid = xc.regridder.grid.create_uniform_grid(-90, 90.1, 1.25, 0, 359.9, 1.875)
+    lat_attrs = {
+        'units': 'degrees_north',
+        'axis': 'Y',
+        'long_name': 'Latitude',
+        'standard_name': 'latitude'
+    }
+    lon_attrs = {
+        'units': 'degrees_east',
+        'axis': 'X',
+        'long_name': 'Longitude',
+        'standard_name': 'longitude'
+    }
+    ds_grid = xr.Dataset(
+        {
+            "lat": (["lat"], np.arange(-90, 90.1, 1.25), lat_attrs),
+            "lon": (["lon"], np.arange(0, 359.9, 1.875), lon_attrs),
+        }
+    )
+    regridder = xe.Regridder(ds, ds_grid, 'bilinear')
+    ds = regridder(ds)
+    ds.attrs = global_attrs
+    if variable:
+        ds[variable].attrs = var_attrs
+
+    return ds
 
 
 def drop_vars(ds):
     """Drop unwanted variables"""
 
-    for var in ['height', 'lat_bnds', 'lon_bnds', 'sigma', 'model_level_number', 'level_height', 'crs']:
+    if (ds.attrs['source_id'] == 'ACCESS-ESM1-5'):
+        nlats = len(ds['lat'])
+        if nlats == 144:
+            ds = xesmf_regrid(ds, variable=ds.attrs['variable_id'])
+
+    for var in ['height', 'sigma', 'model_level_number', 'level_height', 'crs', 'lat_bnds', 'lon_bnds']:
         try:
             ds = ds.drop_vars(var)
         except ValueError:
