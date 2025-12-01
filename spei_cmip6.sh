@@ -23,11 +23,38 @@ flags=$7
 python=/g/data/xv83/dbi599/miniconda3/envs/unseen/bin/python
 
 if [[ "${model}" == "ACCESS-ESM1-5" ]] ; then
-    indir=/g/data/fs38/publications
+    tasmin_hist_indir=/g/data/fs38/publications
+    tasmax_hist_indir=/g/data/fs38/publications
+    pr_hist_indir=/g/data/fs38/publications
+    tasmin_ssp_indir=/g/data/fs38/publications
+    tasmin_ssp_vpos=15
+    tasmax_ssp_indir=/g/data/fs38/publications
+    pr_ssp_indir=/g/data/fs38/publications
 elif [[ "${model}" == "ACCESS-CM2" ]] ; then
-    indir=/g/data/fs38/publications
+    tasmin_hist_indir=/g/data/fs38/publications
+    tasmax_hist_indir=/g/data/fs38/publications
+    pr_hist_indir=/g/data/fs38/publications
+    tasmin_ssp_indir=/g/data/fs38/publications
+    tasmin_ssp_vpos=15
+    tasmax_ssp_indir=/g/data/fs38/publications
+    pr_ssp_indir=/g/data/fs38/publications
+elif [ "${model}" == "UKESM1-0-LL" ] && [ "${ssp}" == "ssp585" ] && [ "${run}" == "r4i1p1f2" ]; then
+    echo "HELLO"
+    tasmin_hist_indir=/g/data/oi10/replicas
+    tasmax_hist_indir=/g/data/oi10/replicas
+    pr_hist_indir=/g/data/oi10/replicas
+    tasmin_ssp_indir=/g/data/xv83/dbi599/rba
+    tasmin_ssp_vpos=16
+    tasmax_ssp_indir=/g/data/oi10/replicas
+    pr_ssp_indir=/g/data/oi10/replicas
 else
-    indir=/g/data/oi10/replicas
+    tasmin_hist_indir=/g/data/oi10/replicas
+    tasmax_hist_indir=/g/data/oi10/replicas
+    pr_hist_indir=/g/data/oi10/replicas
+    tasmin_ssp_indir=/g/data/oi10/replicas
+    tasmin_ssp_vpos=15
+    tasmax_ssp_indir=/g/data/oi10/replicas
+    pr_ssp_indir=/g/data/oi10/replicas
 fi
 spei_dir=/g/data/xv83/dbi599/rba/SPEI/${model}/${ssp}
 
@@ -36,7 +63,7 @@ spei_dir=/g/data/xv83/dbi599/rba/SPEI/${model}/${ssp}
 method=hargreaves85
 evspsblpot_files=()
 
-tasmin_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmin/${grid}/${hversion}/*.nc`)
+tasmin_hist_files=(`ls ${tasmin_hist_indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/tasmin/${grid}/${hversion}/*.nc`)
 for tasmin_path in "${tasmin_hist_files[@]}"; do
     vtasmin=`echo ${tasmin_path} | cut -d / -f 15`
     tasmax_path=`echo ${tasmin_path} | sed s:tasmin:tasmax:g`
@@ -55,10 +82,11 @@ for tasmin_path in "${tasmin_hist_files[@]}"; do
     fi 
 done
 
-tasmin_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmin/${grid}/${sversion}/*20??????-????????.nc`)
+tasmin_ssp_files=(`ls ${tasmin_ssp_indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/tasmin/${grid}/${sversion}/*20??????-????????.nc`)
 for tasmin_path in "${tasmin_ssp_files[@]}"; do
-    vtasmin=`echo ${tasmin_path} | cut -d / -f 15`
+    vtasmin=`echo ${tasmin_path} | cut -d / -f ${tasmin_ssp_vpos}`
     tasmax_path=`echo ${tasmin_path} | sed s:tasmin:tasmax:g`
+    tasmax_path=`echo ${tasmax_path} | sed s:${tasmin_ssp_indir}:${tasmax_ssp_indir}:`
     tasmax_path=`echo ${tasmax_path} | sed s:${vtasmin}:${sversion}:`
     tasmax_path=`ls ${tasmax_path}`
     evspsblpot_file=`basename ${tasmin_path} | sed s:tasmin:evspsblpot-${method}:g`
@@ -77,8 +105,8 @@ done
 
 # SPEI
 
-pr_hist_files=(`ls ${indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${hversion}/*.nc`)
-pr_ssp_files=(`ls ${indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${sversion}/*20??????-????????.nc`)
+pr_hist_files=(`ls ${pr_hist_indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${hversion}/*.nc`)
+pr_ssp_files=(`ls ${pr_ssp_indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${sversion}/*20??????-????????.nc`)
 spei_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_path=${spei_dir}/spei_mon_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 
