@@ -77,7 +77,7 @@ for var in pr tasmax hursmin sfcWindmax; do
     end_date=`echo ${end_date} | cut -d . -f 1`
     concat_file=${ffdi_dir}/${var}_day_${model}_${ssp}_${run}_${grid}_${start_date}-${end_date}.nc
     declare ${var}_file=${concat_file}
-    concat_command="/g/data/xv83/dbi599/miniconda3/envs/agcd/bin/python /home/599/dbi599/rba/nc_concat.py ${hist_files[@]} ${ssp_files[@]} ${concat_file} --ausclip"
+    concat_command="${python} /home/599/dbi599/rba/nc_concat.py ${hist_files[@]} ${ssp_files[@]} ${concat_file} --ausclip"
     if [[ "${flags}" == "-e" ]] ; then
         echo ${concat_command}
         ${concat_command}
