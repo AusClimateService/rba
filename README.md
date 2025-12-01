@@ -39,22 +39,21 @@ For the WSDI (which requires tasmax data)
 and SPEI (which requires tasmax, tasmin and pr data),
 we selected all CMIP6 models that archived daily data for at least five common runs
 across the ssp126, ssp245, ssp370 and ssp585 future emissions scenarios:
-- EC-Earth3 (57 runs)
+- *EC-Earth3 (57 runs)*
 - CanESM (50)
 - ACCESS-ESM1-5 (40)
 - MPI-ESM1-2-LR (10)
 - ACCESS-CM2 (10)
 - IPSL-CM6A-LR (6)
 - UK-ESM1-0-LL (5)
-- EC-Earth3-Veg (5)
+- *EC-Earth3-Veg (5)*
+
+*Note: The EC-Earth and EC-Earth-Veg replica datasets on [NCI](https://dx.doi.org/10.25914/Q1CT-RM13) are not complete for the required variables.
+We are going to submit a data download request to rectify this, but in the meantime those models have not been processed.*
 
 For the FFDI (which requires pr, tasmax, hursmin, sfcWindmax),
-we selected any models at all that archived the required daily variables:
+there is only one model at all that archived the required daily variables for at least five runs:
 - ACCESS-ESM1-5 (40)
-- EC-Earth-Veg (2)
-- EC-Earth3 (1)
-- CNRM-ESM2-1 (1)
-- CMCC-ESM2 (1)
 
 ### Spatial aggregation
 
