@@ -66,8 +66,7 @@ See [development/wsdi_cmip6.ipynb](https://github.com/AusClimateService/rba/blob
 for an illustrated example.
 
 For spatial aggregation of FFDI values,
-grid points in arid climate zones are excluded since those areas
-do not experience large scale fires.
+grid points in arid climate zones were excluded since the FFDI isn't as appropriate / relevant in those zones.
 See [development/koppen_climate_zones.ipynb](https://github.com/AusClimateService/rba/blob/master/development/koppen_climate_zones.ipynb)
 and [development/ffdi-cmip6.ipynb](https://github.com/AusClimateService/rba/blob/master/development/ffdi-cmip6.ipynb) for details.
 
