@@ -5,7 +5,7 @@
 #
 #   model:   ACCESS-CM2 ACCESS-ESM1-5 MPI-ESM1-2-LR
 #   ssp:     ssp126 ssp245 ssp370 ssp585
-#   metric:  wsdi spei ffdi
+#   metric:  wsdi spei ffdi rx1day
 #   job:     test calc clean
 #   flags:   optional flags (e.g. -n for dry run)
 #
