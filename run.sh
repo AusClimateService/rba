@@ -104,8 +104,3 @@ for run in "${runs[@]}"; do
     fi
 done
 
-
-
-
-
-

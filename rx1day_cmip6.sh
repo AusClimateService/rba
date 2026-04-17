@@ -37,7 +37,7 @@ rx1day_path=${rx1day_dir}/rx1day_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
 csv_path=${rx1day_dir}/rx1day_yr_${model}_${ssp}_${run}_aus-states_1850-2100.csv
 
 rx1day_command="${python} /home/599/dbi599/rba/rx1day.py ${rx1day_path} ${pr_hist_files[@]} ${pr_ssp_files[@]}"
-csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${rx1day_path} Rx1day ${csv_path}"
+csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${rx1day_path} Rx1day ${csv_path} --add_cities"
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${rx1day_dir}
     echo ${rx1day_command}
