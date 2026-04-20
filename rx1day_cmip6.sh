@@ -34,7 +34,7 @@ rx1day_dir=/g/data/xv83/dbi599/rba/Rx1day/${model}/${ssp}
 pr_hist_files=(`ls ${pr_indir}/CMIP6/CMIP/*/${model}/historical/${run}/day/pr/${grid}/${hversion}/*.nc`)
 pr_ssp_files=(`ls ${pr_indir}/CMIP6/ScenarioMIP/*/${model}/${ssp}/${run}/day/pr/${grid}/${sversion}/*20??????-????????.nc`)
 rx1day_path=${rx1day_dir}/rx1day_yr_${model}_${ssp}_${run}_${grid}_1850-2100.nc
-csv_path=${rx1day_dir}/rx1day_yr_${model}_${ssp}_${run}_aus-states_1850-2100.csv
+csv_path=${rx1day_dir}/rx1day_yr_${model}_${ssp}_${run}_aus-states-cities_1850-2100.csv
 
 rx1day_command="${python} /home/599/dbi599/rba/rx1day.py ${rx1day_path} ${pr_hist_files[@]} ${pr_ssp_files[@]}"
 csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${rx1day_path} Rx1day ${csv_path} --add_cities"
