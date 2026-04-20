@@ -20,7 +20,7 @@ pr_files=( "${pr_files1[@]}" "${pr_files2[@]}" "${pr_files3[@]}" )
 
 nc_outfile=${outdir}/Rx1day_yr_BARRA-R2_AUST-11_1980-2024.nc
 csv_outfile=${outdir}/Rx1day_yr_BARRA-R2_aus-states-cities_1980-2024.csv
-nc_command="${python} /home/599/dbi599/rba/rx1day.py ${rx1day_path} ${pr_files[@]}"
+nc_command="${python} /home/599/dbi599/rba/rx1day.py ${nc_outfile} ${pr_files[@]}"
 csv_command="${python} /home/599/dbi599/rba/nc_to_csv.py ${nc_outfile} Rx1day ${csv_outfile} --add_cities"
 if [[ "${flags}" == "-e" ]] ; then
     mkdir -p ${outdir}
