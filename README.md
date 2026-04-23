@@ -24,7 +24,7 @@ The following metrics were selected:
   and the number of days per year above the 99th percentile (FFDIgt99p)
   of the reference period (1950-2014).
 - *Wettest day of the year (Rx1day)*:
-  This was used as a very simply proxy for storminess.
+  This was used as a very simple proxy for storms.
 
 The WSDI and SPEI were partly selected because they are also available from the
 [Climate Data Knowledge Portal](https://climateknowledgeportal.worldbank.org/country/australia/climate-data-projections),
