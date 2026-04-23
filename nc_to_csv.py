@@ -181,7 +181,7 @@ def main(args):
     """Run the program."""
 
     regions = get_regions()
-    ds = xr.open_dataset(args.infile, decode_timedelta=False)
+    ds = xr.open_mfdataset(args.infiles, decode_timedelta=False)
     ds = model_fixes(ds)
 
     frac = regions.mask_3D_frac_approx(ds)
@@ -213,7 +213,7 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("infile", type=str, help="input file name")
+    parser.add_argument("infiles", type=str, nargs='*', help="input file name/s")
     parser.add_argument("var", type=str, help="input variable")
     parser.add_argument("outfile", type=str, help="output file name")
     parser.add_argument("--mask_arid", action="store_true", default=False, help="mask arid areas")
