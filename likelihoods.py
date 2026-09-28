@@ -23,6 +23,14 @@ def prep_data(df):
     return df_data, df_ref_data
 
 
+def yrs_to_quantile(yr, decimal_places=5):
+    """Convert a 1-in-X year return period to a quantile."""
+
+    quantile = 1 - (1 / yr)
+    
+    return np.round(quantile, decimal_places)
+
+
 def main(args):
     """Run the program."""
 
@@ -38,15 +46,25 @@ def main(args):
     locations = 'aus-states-cities' if args.metric in ['WSDI', 'Rx1day', 'Rx5day'] else 'aus-states'
 
     if args.metric == "SPEI":
-        quantiles = np.array([0.01, 0.02, 0.025, 0.03, 0.033, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1])
+        if args.highres:
+            quantiles = [yrs_to_quantile(yr) for yr in np.arange(100, 9, -5)]
+            decimal_places = 3
+        else:
+            quantiles = np.array([0.01, 0.02, 0.025, 0.03, 0.033, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1])
+            decimal_places = 1
     else:
-        quantiles = np.array([0.90, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.967, 0.97, 0.975, 0.98, 0.99])
+        if args.highres:
+            quantiles = [yrs_to_quantile(yr) for yr in np.arange(10, 101, 5)]
+            decimal_places = 3
+        else:
+            quantiles = np.array([0.90, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.967, 0.97, 0.975, 0.98, 0.99])
+            decimal_places = 1
     thresholds = df_ref_data.quantile(quantiles)
 
     # write out likelihoods
     for quantile in quantiles:
-        percentile = round(quantile * 100, 1)
-        plabel = str(percentile).zfill(4).replace('.', '-')
+        percentile = round(quantile * 100, decimal_places)
+        plabel = str(percentile).ljust(decimal_places+3, "0").replace('.', '-')
         if quantile > 0.5:
             df_threshold_test = df_data > thresholds.loc[quantile]
         else:
@@ -55,7 +73,7 @@ def main(args):
         odds.index = df['year'].unique()
         odds = odds.dropna()
         odds.index.name = 'year'
-        odds = odds.round(decimals=1)
+#        odds = odds.round(decimals=1)
         start_year = odds.index[0]
         end_year = odds.index[-1]
 
@@ -101,5 +119,6 @@ if __name__ == '__main__':
     parser.add_argument("infile", type=str, help="input csv file name (i.e. for a given model and experiment)")
     parser.add_argument("metric", type=str, choices=('WSDI', 'SPEI', 'FFDIx', 'FFDIgt99p', 'Rx1day', 'Rx5day'), help="input metric")
     parser.add_argument("outdir", type=str, help="output directory")
+    parser.add_argument("--highres", action="store_true", default=False, help="High resolution percentile granularity")
     args = parser.parse_args()
     main(args)
